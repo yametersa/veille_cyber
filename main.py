@@ -62,17 +62,20 @@ else:
 
 #Partie CVE
 url = "https://vuldb.com/?api"
-payload = {"apikey": "746cc242616eca0605762e81e9e82652", "recent": "50"}
+payload = {"apikey": "f87caa578056f12a0b2491ab1f505258", "recent": "50"}
 
 response = requests.post(url, data=payload)
 data = response.json()
 count = 0
 
 #Get l'API et check si y'a des vulns en high
-for vuln in data["result"]:
-   if (vuln["vulnerability"]["risk"]["name"] == "high"):
-       print("[red]CVE Critique : " + vuln["source"]["cve"]["id"] + " | " + vuln["entry"]["title"])
-       count = count + 1
+try:
+    for vuln in data["result"]:
+       if (vuln["vulnerability"]["risk"]["name"] == "high"):
+           print("[red]CVE Critique : " + vuln["source"]["cve"]["id"] + " | " + vuln["entry"]["title"])
+           count = count + 1
+except:
+    print("Plus de credit d'API.")
 
 if count == 0:
    print ("\n[green]Pas de nouvel CVE critique.")
