@@ -6,32 +6,35 @@ from bs4 import BeautifulSoup
 
 print("Veille Cyber Securite : \n")
 
-### partie Scrap it-connect ###
-url = "https://www.it-connect.fr/actualites/actu-securite/"
-response = requests.get(url)
+try:
+    ### partie Scrap it-connect ###
+    url = "https://www.it-connect.fr/actualites/actu-securite/"
+    response = requests.get(url)
 
-soup = BeautifulSoup(response.content, "html.parser")
-article_titles = soup.find_all("h2")
+    soup = BeautifulSoup(response.content, "html.parser")
+    article_titles = soup.find_all("h2")
 
-#Check si requete precedente = requete
-with open("C:\API\cache.txt", "r") as file:
-    old_articles = file.read()
+    #Check si requete precedente = requete
+    with open("C:\API\cache.txt", "r") as file:
+        old_articles = file.read()
 
-#Check for nouveau article
-if old_articles == str(article_titles):
-    print ("[green]Pas de nouvel article.\n")
-else:
-   #Prend uniquement le dernier article
-   title = article_titles[0]
-   #Vire les espaces vides
-   titre = title.text[6:]
+    #Check for nouveau article
+    if old_articles == str(article_titles):
+        print ("[green]Pas de nouvel article.\n")
+    else:
+       #Prend uniquement le dernier article
+       title = article_titles[0]
+       #Vire les espaces vides
+       titre = title.text[6:]
 
-   print("[red]Nouvel article :\n")
-   print(titre)
+       print("[red]Nouvel article :\n")
+       print(titre)
 
-#Save articles
-with open("C:\API\cache.txt", "w") as file:
-    file.write(str(article_titles))
+    #Save articles
+    with open("C:\API\cache.txt", "w") as file:
+        file.write(str(article_titles))
+except:
+    print("[red]Error scrap it-connect.\n")
 
 ### partie Scrap ANSII  ###
 url = "https://www.cert.ssi.gouv.fr/alerte/"
@@ -74,8 +77,8 @@ try:
        if (vuln["vulnerability"]["risk"]["name"] == "high"):
            print("[red]CVE Critique : " + vuln["source"]["cve"]["id"] + " | " + vuln["entry"]["title"])
            count = count + 1
-except:
-    print("Plus de credit d'API.")
 
-if count == 0:
-   print ("\n[green]Pas de nouvel CVE critique.")
+    if count == 0:
+       print ("\n[green]Pas de nouvel CVE critique.")
+except:
+    print("[red]Plus de credit d'API.")
